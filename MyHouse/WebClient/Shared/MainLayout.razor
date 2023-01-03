@@ -1,0 +1,95 @@
+﻿@inherits LayoutComponentBase
+@inject NavigationManager _navManager
+
+<RadzenLayout class="rz-shadow-3">
+    <RadzenHeader>
+        <div class="box">
+            <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)"/>
+            <div>
+                   @if (!_navManager.Uri.Contains("bv-199"))
+                   {
+                       <AuthorizeView>
+                           <Authorized>
+                               <RadzenProfileMenu>
+                                   <Template>
+                                       <div class="box">
+                                           <h3 class="text-black fw-bolder">
+                                               @context.User.Identity.Name
+                                           </h3>
+                                           <RadzenGravatar Email="user@example.com">
+                                           </RadzenGravatar>
+                                       </div>
+                                   </Template>
+                                   <ChildContent>
+                                       <RadzenProfileMenuItem Text="Buttons" Path="buttons" Icon="account_circle"></RadzenProfileMenuItem>
+                                       <RadzenProfileMenuItem Text="Menu" Path="menu" Icon="line_weight"></RadzenProfileMenuItem>
+                                       <RadzenProfileMenuItem Text="FileInput" Path="fileinput" Icon="attach_file"></RadzenProfileMenuItem>
+                                       <RadzenProfileMenuItem Text="Dialog" Path="dialog" Icon="perm_media"></RadzenProfileMenuItem>
+                                       <RadzenProfileMenuItem Text="Notification" Path="notification" Icon="announcement"></RadzenProfileMenuItem>
+                                       <RadzenProfileMenuItem Text="Logout" Path="logout" Icon="announcement"></RadzenProfileMenuItem>
+
+                                   </ChildContent>
+                               </RadzenProfileMenu>
+                           </Authorized>
+                       </AuthorizeView>
+                   }
+            </div>
+        </div>
+
+    </RadzenHeader>
+   @if (!_navManager.Uri.Contains("bv-199"))
+   {
+       <RadzenSidebar @bind-Expanded="@sidebar1Expanded">
+
+           <AuthorizeView>
+               <Authorized>
+                   <RadzenPanelMenu>
+                       <Menu></Menu>
+                   </RadzenPanelMenu>
+               </Authorized>
+               <NotAuthorized>
+               </NotAuthorized>
+           </AuthorizeView>
+
+       </RadzenSidebar>
+   }
+
+   <RadzenBody>
+       
+       <ErrorBoundary>
+           <ChildContent>
+                 @Body
+           </ChildContent>
+           <ErrorContent>
+                 @Body
+           </ErrorContent>
+       </ErrorBoundary>
+    
+   </RadzenBody>
+   
+    <RadzenFooter Style="display: none" >
+        Footer
+    </RadzenFooter>
+</RadzenLayout>
+
+<RadzenNotification/>
+<RadzenDialog/>
+
+@code {
+    bool sidebar1Expanded = true;
+    bool sidebar2Expanded = true;
+    bool sidebar3Expanded = true;
+    bool sidebar4Expanded = true;
+    bool sidebar5Expanded = true;
+    bool sidebar6Expanded = true;
+
+
+    ErrorBoundary? boundary;
+    
+    protected override void OnParametersSet()
+    {
+        boundary?.Recover();
+        
+    }
+
+}

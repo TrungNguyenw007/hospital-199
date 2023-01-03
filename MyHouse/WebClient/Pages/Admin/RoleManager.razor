@@ -1,0 +1,85 @@
+﻿@page "/role"
+@using ButtonType = Radzen.ButtonType
+@inject RoleManagerService _roleManagerService;
+@inherits BaseBlazorPage
+@using Contract.Identity.RoleManager;
+@using WebClient.Service.Roles
+
+<h3>Role</h3>
+
+
+
+<div style="display: flex;justify-content: space-between;align-items: center">
+    <div>
+        <RadzenBreadCrumb >
+                <RadzenBreadCrumbItem Path="/" Icon="home" Style="font-size: 20px"/>
+                <RadzenBreadCrumbItem Text="@HeaderTitle" Style="font-weight: 300"/>
+            </RadzenBreadCrumb>
+    </div>
+    <div>
+     <RadzenButton Text="Create" Click="@ShowNewModal" Style="margin-bottom: 20px;"/>
+    </div>
+</div>
+
+
+<RadzenCard>
+    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                    Data="@Roles" TItem="RoleDto" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" Style="width: 100%">
+        <Columns>
+            <RadzenDataGridColumn TItem="RoleDto" Property="Index" Filterable="false" Title="Index" Frozen="true" Width="80px" TextAlign="TextAlign.Center"/>
+            <RadzenDataGridColumn TItem="RoleDto" Property="Name" Title="Name" Frozen="true" Width="160px"/>
+            <RadzenDataGridColumn TItem="RoleDto" Property="Name" Title="Action" Frozen="true" Width="160px">
+                <Template Context="data">
+                    <RadzenButton Click="async () => { await ShowEditModal(data); }" Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium">
+                    </RadzenButton>
+    
+                    <RadzenButton Click="async () => { await ShowConfirmMessage(data.Id); }" ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" Class="my-1 ms-1">
+                    </RadzenButton>
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</RadzenCard>
+
+
+<Modal @ref="CreateModal">
+    <ModalContent Size="ModalSize.ExtraLarge">
+        <ModalHeader>
+            <ModalTitle>Role</ModalTitle>
+        </ModalHeader>
+        <EditForm Model="NewRole" OnValidSubmit="async () => { await CreateRole(); }">
+            <ModalBody>
+
+                <DataAnnotationsValidator/>
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Name</RadzenText>
+                <RadzenTextBox Class="w-100" @bind-Value="NewRole.Name"/>
+                <ValidationMessage For="@(() => NewRole.Name)"/>
+            </ModalBody>
+            <ModalFooter>
+                <RadzenButton ButtonStyle="ButtonStyle.Dark" Click="@HideNewModal">Close</RadzenButton>
+                <RadzenButton Text="Save Changes" ButtonType="ButtonType.Submit"/>
+            </ModalFooter>
+        </EditForm>
+    </ModalContent>
+</Modal>
+
+<Modal @ref="EditModal">
+    <ModalContent Size="ModalSize.ExtraLarge">
+        <ModalHeader>
+            <ModalTitle>User</ModalTitle>
+        </ModalHeader>
+        <EditForm Model="EditRole" OnValidSubmit="async () => { await UpdateRole(); }">
+
+            <ModalBody>
+                <DataAnnotationsValidator/>
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Name</RadzenText>
+                <RadzenTextBox Class="w-100" @bind-Value="EditRole.Name"/>
+                <ValidationMessage For="@(() => EditRole.Name)"/>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary" Clicked="@HideEditModal">Close</Button>
+                <RadzenButton Text="Save Changes" ButtonType="ButtonType.Submit"/>
+            </ModalFooter>
+        </EditForm>
+    </ModalContent>
+</Modal>

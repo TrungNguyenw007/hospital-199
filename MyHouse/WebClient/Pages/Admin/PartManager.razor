@@ -1,0 +1,149 @@
+﻿@page "/part"
+@using WebClient.Service.Parts
+@using Contract.Parts
+@using WebClient.Service.Upload
+@using ButtonType = Radzen.ButtonType
+@inject PartService _partService;
+@inject UploadService _uploadService;
+@inherits BaseBlazorPage
+@inject DialogService DialogService
+
+<h3>Part </h3>
+
+
+
+
+<div style="display: flex;justify-content: space-between;align-items: center">
+    <div>
+        <RadzenBreadCrumb >
+                <RadzenBreadCrumbItem Path="/" Icon="home" Style="font-size: 20px"/>
+                <RadzenBreadCrumbItem Text="@HeaderTitle" Style="font-weight: 300"/>
+            </RadzenBreadCrumb>
+    </div>
+    <div>
+      <RadzenButton Text="Create" Click="@ShowNewModal" />
+    </div>
+</div>
+<RZBR></RZBR>
+<RadzenCard>
+    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                    Data="@Parts" TItem="PartDto" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" Style="width: 100%">
+        <Columns>
+            <RadzenDataGridColumn TItem="PartDto" Property="Index" Filterable="false" Title="Index" Frozen="true" Width="80px" TextAlign="TextAlign.Center"/>
+            <RadzenDataGridColumn TItem="PartDto" Property="ImageUrl" Title="Photo" Frozen="true" Width="80px" TextAlign="TextAlign.Center">
+                <Template Context="data">
+                    <RadzenImage Path="@data.ImageUrl" class="rz-gravatar" Style="width: 64px;height: 64px"/>
+                </Template>
+            </RadzenDataGridColumn>
+    
+            <RadzenDataGridColumn TItem="PartDto" Property="Name" Title="Name" Frozen="true" Width="160px"/>
+            <RadzenDataGridColumn TItem="PartDto" Property="Note" Title="Note" Frozen="true" Width="160px"/>
+            <RadzenDataGridColumn TItem="PartDto" Property="Odx" Title="Odx" Frozen="true" Width="160px"/>
+            <RadzenDataGridColumn TItem="PartDto" Property="IsActive" Title="Odx" Frozen="true" Width="160px">
+                <Template Context="data">
+                    <RadzenSwitch @bind-Value=@data.IsActive Disabled="true"/>
+                </Template>
+    
+            </RadzenDataGridColumn>
+    
+    
+            <RadzenDataGridColumn TItem="PartDto" Property="Note" Title="Action" Frozen="true" Width="160px">
+                <Template Context="data">
+                    <RadzenButton Click="() => { ShowEditModal(data); }" Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium">
+                    </RadzenButton>
+    
+                    <RadzenButton Click="async () => { await ShowConfirmMessage(data.Id); }" ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" Class="my-1 ms-1">
+                    </RadzenButton>
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</RadzenCard>
+
+
+
+
+
+<Modal @ref="CreateModal">
+    <ModalContent Size="ModalSize.ExtraLarge">
+        <ModalHeader>
+            <ModalTitle>Part</ModalTitle>
+        </ModalHeader>
+        <EditForm Model="NewPart" OnValidSubmit="CreatePart" enctype="multipart/form-data">
+            <ModalBody>
+                <DataAnnotationsValidator/>
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Name</RadzenText>
+                <RadzenTextBox Class="w-100" @bind-Value="NewPart.Name"/>
+                <ValidationMessage For="@(() => NewPart.Name)"/>
+
+
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Note</RadzenText>
+                <RadzenTextBox Class="w-100" @bind-Value="NewPart.Note"/>
+                <ValidationMessage For="@(() => NewPart.Note)"/>
+
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Odx</RadzenText>
+                <RadzenNumeric TValue="int" @bind-Value="NewPart.Odx" Class="w-100"/>
+                <ValidationMessage For="@(() => NewPart.Odx)"/>
+                
+                <div style="margin-top: 5px"></div>
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3" Style="display: inline">IsActive</RadzenText>
+                <RadzenSwitch @bind-Value=@NewPart.IsActive />
+                <ValidationMessage For="@(() => NewPart.IsActive)"/>
+
+                <div style="margin-top: 5px"></div>
+                
+                <RZInputFile Event="async (e) => { await OnChangeFileAtNewModal(e);}"></RZInputFile>
+                
+                @* <InputFile class="file-input" OnChange="async (e) => { await OnChangeFileAtNewModal(e); }" accept="image/png, image/jpeg, image/gif" id="inputFile"/> *@
+                @* <label for="inputFile" class="file-label">Choose File</label> *@
+                @* <span id="file-chosen">@fileStatus</span> *@
+                
+            </ModalBody>
+            <ModalFooter>
+                <RadzenButton ButtonStyle="ButtonStyle.Dark" Click="@HideNewModal">Close</RadzenButton>
+                <RadzenButton Text="Save Changes" ButtonType="ButtonType.Submit"/>
+            </ModalFooter>
+        </EditForm>
+    </ModalContent>
+</Modal>
+
+
+<Modal @ref="EditModal">
+    <ModalContent Size="ModalSize.ExtraLarge">
+        <ModalHeader>
+            <ModalTitle>Part</ModalTitle>
+        </ModalHeader>
+        <EditForm Model="EditPart" OnValidSubmit="async () => { await UpdatePart(); }">
+
+            <ModalBody>
+                <DataAnnotationsValidator/>
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Name</RadzenText>
+                <RadzenTextBox Class="w-100" @bind-Value="EditPart.Name"/>
+                <ValidationMessage For="@(() => EditPart.Name)"/>
+
+
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Note</RadzenText>
+                <RadzenTextBox Class="w-100" @bind-Value="EditPart.Note"/>
+                <ValidationMessage For="@(() => EditPart.Note)"/>
+
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Odx</RadzenText>
+                <RadzenNumeric TValue="int" @bind-Value="EditPart.Odx" Class="w-100"/>
+                <ValidationMessage For="@(() => EditPart.Odx)"/>
+
+                <div style="margin-top: 8px"></div>
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3" Style="display: inline">IsActive</RadzenText>
+                <RadzenSwitch @bind-Value=@EditPart.IsActive />
+                <ValidationMessage For="@(() => EditPart.IsActive)" />
+                <div style="margin-top: 5px"></div>
+                <RZInputFile Event="async(e) => {await OnChangeFileAtEditModal(e); }"></RZInputFile>
+
+                @* <InputFile class="file-input" OnChange="OnChangeFileAtEditModal" accept="image/png, image/jpeg, image/gif" /> *@
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary" Clicked="@HideEditModal">Close</Button>
+                <RadzenButton Text="Save Changes" ButtonType="ButtonType.Submit"/>
+            </ModalFooter>
+        </EditForm>
+    </ModalContent>
+</Modal>
+

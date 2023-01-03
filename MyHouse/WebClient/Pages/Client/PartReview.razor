@@ -1,0 +1,112 @@
+﻿@page "/bv-199/part-review"
+@using WebClient.Service.PartReviews
+@using ButtonType = Radzen.ButtonType
+@inherits BaseBlazorPage
+@inject PartReviewService _partReviewService;
+@inject PartService _partService;
+@inject DialogService DialogService
+
+@using Contract.PartReviews;
+@using Microsoft.EntityFrameworkCore.Storage
+@using WebClient.Service.Parts
+@using Orientation = Radzen.Orientation
+
+
+
+
+<div style="margin: 0 auto;width: 305px;height: 381px">
+    <RadzenImage Path="Images/Logo/Logo_BenhVien199.png" Style="width: 100%;height: 100%"/>
+</div>
+
+<h1 style="text-align: center">Đánh Giá Hài Lòng Người Bệnh</h1>
+<br/>
+
+
+<RadzenDataList WrapItems="true" AllowPaging="true" Data="@ReviewsWithNav" TItem="ReviewWithNavPropertiesModel" PageSize="20" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+    <Template Context="data">
+        <RadzenCard Style="width: 100%; padding: 0; overflow: hidden;background-color:#80808012">
+            <Row>
+                <Column ColumnSize="ColumnSize.Is2" Style="height:150px;padding: 5px">
+                    <RadzenImage Path=@data.ImageUrl Style="width: 100%;height: 100%;object-fit: contain"/>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is10" Style="display: flex;flex-direction:column;justify-content: space-around">
+                    <div>
+                        <strong style="font-size:25px">@@Bộ Phận:</strong>
+                        <RadzenBadge BadgeStyle="BadgeStyle.Dark" Text="@data.Name" Style="color:gold;font-size:25px"/>
+                    </div>
+                    <br/>
+                    <div>
+                        <Rating MaxValue="5" @bind-SelectedValue="data.Rating" Style="color: goldenrod;font-size: 30px"/>
+                    </div>
+                </Column>
+            </Row>
+        </RadzenCard>
+
+    </Template>
+</RadzenDataList>
+
+<div style="display: flex;justify-content: center">
+    <RadzenButton Click="async () => { await CreatePartReviewsWithDetail(); }" ButtonStyle="ButtonStyle.Info" Text="Đánh Giá" Size="ButtonSize.Large" Style="background-color: #0eb1ae"/>
+</div>
+
+
+@* <Modal @ref="CreateModal" > *@
+@*     <ModalContent Size="ModalSize.ExtraLarge"> *@
+@*         <ModalHeader> *@
+@*             $1$ <div> #1# *@
+@*             $1$     <RadzenImage Path="Images/Logo/online-review-feature-image-1024x640.png" Style="width: 100%;height: 100%"/> #1# *@
+@*             $1$ </div> #1# *@
+@*         </ModalHeader> *@
+@* *@
+@*         <ModalBody > *@
+@*             <h3>Bạn có muốn góp ý kiến vào các bộ phận?</h3> *@
+@*             <RadzenTextArea Placeholder="Nhập vào đây..." @bind-Value="ReviewNote" Rows="10" Cols="20" Class="w-100"/> *@
+@* *@
+@*         </ModalBody> *@
+@* *@
+@*         <ModalFooter> *@
+@*             <RadzenButton Color="Color.Secondary" Click="HideNewModal" >Bỏ Qua</RadzenButton> *@
+@*             <RadzenButton Text="Gữi" ButtonType="ButtonType.Submit"  Click="UpdatePartReviews"/> *@
+@*         </ModalFooter> *@
+@*     </ModalContent> *@
+@* </Modal> *@
+@* *@
+@* <RadzenButton Text="Dialog with inline Blazor content" Style="width: 100%;" ButtonStyle="ButtonStyle.Secondary" Click=@ShowInlineDialog /> *@
+
+
+
+@code{
+    string Name { get; set; }
+    string fileName;
+    long? fileSize;
+
+    async Task ShowInlineDialog()
+    {
+        var result = await DialogService.OpenAsync("Bạn có muốn góp ý kiến vào các bộ phận?", ds =>
+            
+            @<div style="overflow: hidden">
+                <div style="height:275px">
+                    <RadzenImage Path="Images/Logo/online-review-feature-image-1024x640.png" Style="width: 100%;height: 100%"/>
+                </div>
+                <h3>Bạn có muốn góp ý kiến vào các bộ phận?</h3>
+                <RadzenTextArea Placeholder="Nhập vào đây..." @bind-Value="ReviewNote" Rows="10" Cols="30" Class="w-100"/>
+                <div class="row">
+                    <div class="col">
+                        <RadzenButton Text="Ok" Click="async () => await HideDiaLog(ds)" Class="me-1" Style="width: 80px;"/>
+                        <RadzenButton Text="Cancel" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" Class="me-1"/>
+                    </div>
+                </div>
+            </div>,new DialogOptions(){Width = "70vw",Height = "96vh",Style = "",ShowTitle = false});
+    }
+
+    void OnChange(string value, string name)
+    {
+      
+    }
+
+    void OnError(UploadErrorEventArgs args, string name)
+    {
+     
+    }
+
+}

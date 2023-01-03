@@ -1,0 +1,139 @@
+﻿@page "/user"
+@using ButtonType = Radzen.ButtonType
+@inject UserManagerService _userManagerService;
+@inherits BaseBlazorPage
+@inject RoleManagerService _roleManagerService;
+
+@using Contract.Identity.UserManager;
+@using Microsoft.AspNetCore.Components
+@using WebClient.Service.Roles
+@using WebClient.Service.Users
+
+<h3>@HeaderTitle</h3>
+
+<div style="display: flex;justify-content: space-between;align-items: center">
+    <div>
+        <RadzenBreadCrumb >
+                <RadzenBreadCrumbItem Path="/" Icon="home" Style="font-size: 20px"/>
+                <RadzenBreadCrumbItem Text="@HeaderTitle" Style="font-weight: 300"/>
+            </RadzenBreadCrumb>
+    </div>
+    <div>
+        <RadzenButton Text="Create" Click="@ShowNewModal" />
+    </div>
+</div>
+
+<RZBR/>
+
+
+<RadzenCard>
+    <Row Style="display:flex;align-items: center">
+        <Column ColumnSize="ColumnSize.Is2">
+            <RadzenIcon Icon="calendar_today" />
+        </Column>
+        
+        <Column ColumnSize="ColumnSize.Is7">
+            <RadzenTextBox Placeholder="Search..."  Class="w-100" />
+        </Column>
+        
+        <Column ColumnSize="ColumnSize.Is3">
+            <RadzenButton Text="Search"  Icon="search"/>
+        </Column>
+        
+    </Row>
+</RadzenCard>
+
+<RZBR/>
+
+
+
+
+              <RadzenCard>
+<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="10" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                Data="@UsersWithNav" TItem="UserWithNavigationDto" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or"  Style="width: 100%">
+    <Columns>
+        <RadzenDataGridColumn TItem="UserWithNavigationDto" Property="Index" Filterable="false" Title="Index" Frozen="true" Width="80px" TextAlign="TextAlign.Center"/>
+        <RadzenDataGridColumn TItem="UserWithNavigationDto" Property="UserDto.UserName" Title="User Name" Frozen="true" Width="160px"/>
+        <RadzenDataGridColumn TItem="UserWithNavigationDto" Property="UserDto.RoleNames" Title="Roles" Frozen="true" Width="160px">
+            <Template Context="data">
+                @{ int i = 0; }
+                @foreach (var item in data.RoleNames)
+                {
+                    <RadzenBadge BadgeStyle="ChooseColorByNumber(i)" IsPill="@true" Text="@item" Class="ml-2"/>
+                    i++;
+                }
+
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="UserWithNavigationDto" Property="UserName" Title="Action" Frozen="true" Width="160px">
+            <Template Context="data">
+                <RadzenButton Click="() => { ShowEditModal(data.UserDto.Id); }" Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium">
+                </RadzenButton>
+                <RadzenButton Click="async () => { await ShowConfirmMessage(data.UserDto.Id); }" ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" Class="my-1 ms-1">
+                </RadzenButton>
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+</RadzenCard>
+
+<Modal @ref="CreateModal">
+    <ModalContent Size="ModalSize.ExtraLarge">
+        <ModalHeader>
+            <ModalTitle>User</ModalTitle>
+        </ModalHeader>
+        <EditForm Model="NewUser" OnValidSubmit="async () => { await CreateUser(); }">
+            <ModalBody>
+
+                <DataAnnotationsValidator/>
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">UserName</RadzenText>
+                <RadzenTextBox Class="w-100" @bind-Value="NewUser.User.UserName"/>
+                <ValidationMessage For="@(() => NewUser.User.UserName)"/>
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Password</RadzenText>
+                <RadzenPassword Class="w-100" @bind-Value="NewUser.User.Password"/>
+                <ValidationMessage For="@(() => NewUser.User.Password)"/>
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Enter again Password </RadzenText>
+                <RadzenPassword Class="w-100" @bind-Value="NewUser.User.PasswordConfirm"/>
+                <ValidationMessage For="@(() => NewUser.User.PasswordConfirm)"/>
+                <InputFile OnChange="OnChooseFile" multiple/>
+
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Role</RadzenText>
+                <RadzenDropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                @bind-Value=@SelectedRoles Multiple="true" Placeholder="Select..." Data=@RoleNames
+                                Change="OnCreateSelectedRoles" Class="w-100"/>
+
+            </ModalBody>
+            <ModalFooter>
+                <RadzenButton ButtonStyle="ButtonStyle.Secondary" Clicked="@HideNewModal">Close</RadzenButton>
+                <RadzenButton Text="Save Changes" ButtonType="ButtonType.Submit"/>
+            </ModalFooter>
+        </EditForm>
+    </ModalContent>
+</Modal>
+
+<Modal @ref="EditModal">
+    <ModalContent Size="ModalSize.ExtraLarge">
+        <ModalHeader>
+            <ModalTitle>User</ModalTitle>
+        </ModalHeader>
+        <EditForm Model="EditUser" OnValidSubmit="async () => { await UpdateUser(); }">
+
+            <ModalBody>
+                <DataAnnotationsValidator/>
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">UserName</RadzenText>
+                <RadzenTextBox Class="w-100" @bind-Value="EditUser.User.UserName"/>
+                <ValidationMessage For="@(() => EditUser.User.UserName)"/>
+
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Role</RadzenText>
+                <RadzenDropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                @bind-Value=@SelectedRoles Multiple="true" Placeholder="Select..." Data=@RoleNames
+                                Change="OnEditSelectedRoles" Class="w-100"/>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary" Clicked="@HideEditModal">Close</Button>
+                <RadzenButton Text="Save Changes" ButtonType="ButtonType.Submit"/>
+            </ModalFooter>
+        </EditForm>
+    </ModalContent>
+</Modal>

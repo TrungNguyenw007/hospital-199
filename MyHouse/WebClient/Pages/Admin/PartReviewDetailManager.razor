@@ -1,0 +1,88 @@
+﻿@page "/part-review-detail"
+@using WebClient.Service.PartReviewDetails
+@using Contract.PartReviewDetails;
+@using Microsoft.EntityFrameworkCore.Storage
+@using ButtonType = Radzen.ButtonType
+@inject PartReviewDetailService _partReviewDetailService;
+@inherits BaseBlazorPage
+
+
+<h3>@HeaderTitle</h3>
+
+<div style="display: flex;justify-content: space-between;align-items: center">
+    <div>
+        <RadzenBreadCrumb >
+            <RadzenBreadCrumbItem Path="/" Icon="home" Style="font-size: 20px"/>
+            <RadzenBreadCrumbItem Path="/part-review" Text="Part Review"/>
+            <RadzenBreadCrumbItem Text="@HeaderTitle" Style="font-weight: 300"/>
+        </RadzenBreadCrumb>
+    </div>
+    <div>
+        @* <RadzenButton Text="Create" Click="@ShowNewModal" Icon="add" /> *@
+    </div>
+</div>
+
+@* <RadzenButton Text="Create" Click="@ShowNewModal" Style="margin-bottom: 20px;"/> *@
+
+<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                Data="@Details" TItem="PartReviewDetailDto" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" Style="width: 50%">
+    <Columns>
+        <RadzenDataGridColumn TItem="PartReviewDetailDto" Property="Index" Filterable="false" Title="Index" Frozen="true" Width="80px" TextAlign="TextAlign.Center"/>
+        <RadzenDataGridColumn TItem="PartReviewDetailDto" Property="PartName" Filterable="false" Title="Part" Frozen="true" Width="80px" TextAlign="TextAlign.Center"/>
+        <RadzenDataGridColumn TItem="PartReviewDetailDto" Property="Rate" Title="Rating" Frozen="true" Width="160px">
+            <Template Context="data">
+                <RadzenRating ReadOnly="true" Stars="5" @bind-Value=@data.Rate />
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="PartReviewDetailDto" Property="Name" Title="Action" Frozen="true" Width="160px">
+            <Template Context="data">
+                <RadzenButton Click="async () => { await ShowEditModal(data); }" Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium">
+                </RadzenButton>
+                @* <RadzenButton ButtonStyle="ButtonStyle.Info" Click="async () => { await ShowEditModal(data); }" Text="Edit" Size="ButtonSize.Medium"/> *@
+                @* <RadzenButton ButtonStyle="ButtonStyle.Dark" Click="async () => { await DeleteDetail(data.Id); }" Text="Delete" Size="ButtonSize.Medium"/> *@
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+
+<Modal @ref="CreateModal">
+    <ModalContent Size="ModalSize.ExtraLarge">
+        <ModalHeader>
+            <ModalTitle>Create Rating</ModalTitle>
+        </ModalHeader>
+        <EditForm Model="NewDetail" OnValidSubmit="async () => { await CreateDetail(); }">
+            <ModalBody>
+
+                <DataAnnotationsValidator/>
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Rating</RadzenText>
+                <RadzenRating Stars="5" @bind-Value=@NewDetail.Rate />
+            </ModalBody>
+            <ModalFooter>
+                <RadzenButton ButtonStyle="ButtonStyle.Dark" Click="@HideNewModal">Close</RadzenButton>
+                <RadzenButton Text="Save Changes" ButtonType="ButtonType.Submit"/>
+            </ModalFooter>
+        </EditForm>
+    </ModalContent>
+</Modal>
+
+
+<Modal @ref="EditModal">
+    <ModalContent Size="ModalSize.ExtraLarge">
+        <ModalHeader>
+            <ModalTitle>Update Rating</ModalTitle>
+        </ModalHeader>
+        <EditForm Model="EditDetail" OnValidSubmit="async () => { await UpdateDetail(); }">
+            <ModalBody>
+                <DataAnnotationsValidator/>
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Ratting</RadzenText>
+                <RadzenRating Stars="5" @bind-Value=@EditDetail.Rate />
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary" Clicked="@HideEditModal">Close</Button>
+                <RadzenButton Text="Save Changes" ButtonType="ButtonType.Submit"/>
+            </ModalFooter>
+        </EditForm>
+    </ModalContent>
+</Modal>

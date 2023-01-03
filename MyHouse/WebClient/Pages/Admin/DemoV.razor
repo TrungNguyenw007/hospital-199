@@ -1,0 +1,13 @@
+﻿@page "/demo"
+@using Core.Extension
+@attribute [Authorize(Roles = "admin")]
+
+
+
+<AuthorizeView>
+    @if (context.User.HasClaim("manager-level-1", "add",true))
+    {
+        <h1>See Add</h1>
+    }
+</AuthorizeView>
+<h1>xin chao</h1>

@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi\WebApi.csproj", "{14650BA5-6733-461E-806E-3396124C30BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contract", "Contract\Contract.csproj", "{97EADC46-7753-439A-AEAD-EA6352F22519}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{8D6CBB58-F1D8-471A-8624-DBAB985974BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebClient", "WebClient\WebClient.csproj", "{48F26336-6B89-4FAD-B492-7E9FDF43B88D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{0D050BCE-1B70-4ACA-A9A1-AE7A74C35A93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Localization", "Localization\Localization.csproj", "{888301B0-737A-468E-9586-3FE623911AD6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlServ4r", "SqlServ4r\SqlServ4r.csproj", "{09937A87-E300-48F4-9070-388202634117}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{17CAF9A3-22E3-498D-BF69-74FB879A46D6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{14650BA5-6733-461E-806E-3396124C30BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14650BA5-6733-461E-806E-3396124C30BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14650BA5-6733-461E-806E-3396124C30BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14650BA5-6733-461E-806E-3396124C30BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97EADC46-7753-439A-AEAD-EA6352F22519}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97EADC46-7753-439A-AEAD-EA6352F22519}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97EADC46-7753-439A-AEAD-EA6352F22519}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97EADC46-7753-439A-AEAD-EA6352F22519}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D6CBB58-F1D8-471A-8624-DBAB985974BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D6CBB58-F1D8-471A-8624-DBAB985974BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D6CBB58-F1D8-471A-8624-DBAB985974BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D6CBB58-F1D8-471A-8624-DBAB985974BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48F26336-6B89-4FAD-B492-7E9FDF43B88D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48F26336-6B89-4FAD-B492-7E9FDF43B88D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48F26336-6B89-4FAD-B492-7E9FDF43B88D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48F26336-6B89-4FAD-B492-7E9FDF43B88D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D050BCE-1B70-4ACA-A9A1-AE7A74C35A93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D050BCE-1B70-4ACA-A9A1-AE7A74C35A93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D050BCE-1B70-4ACA-A9A1-AE7A74C35A93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D050BCE-1B70-4ACA-A9A1-AE7A74C35A93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{888301B0-737A-468E-9586-3FE623911AD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{888301B0-737A-468E-9586-3FE623911AD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{888301B0-737A-468E-9586-3FE623911AD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{888301B0-737A-468E-9586-3FE623911AD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09937A87-E300-48F4-9070-388202634117}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09937A87-E300-48F4-9070-388202634117}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09937A87-E300-48F4-9070-388202634117}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09937A87-E300-48F4-9070-388202634117}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17CAF9A3-22E3-498D-BF69-74FB879A46D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17CAF9A3-22E3-498D-BF69-74FB879A46D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17CAF9A3-22E3-498D-BF69-74FB879A46D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17CAF9A3-22E3-498D-BF69-74FB879A46D6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

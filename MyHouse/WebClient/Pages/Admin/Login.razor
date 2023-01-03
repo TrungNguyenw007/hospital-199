@@ -1,0 +1,18 @@
+﻿@page "/login"
+@inject UserManagerService _userManagerService;
+@inject NavigationManager _navigationManager;
+@using System
+@using WebClient.Service.Users
+<h3>Login</h3>
+
+<RadzenCard>
+    <EditForm Model="UserModel" OnValidSubmit="async () => {await SignIn(); }">
+           <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">UserName</RadzenText>
+            <RadzenTextBox Class="w-100" @bind-Value="UserModel.UserName"/>
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Password</RadzenText>
+            <RadzenPassword Class="w-100" @bind-Value="UserModel.Password"/>
+            <button type="submit" class="btn btn-primary">Sign In</button>
+
+    </EditForm>
+
+</RadzenCard>
